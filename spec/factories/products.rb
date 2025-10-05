@@ -8,7 +8,12 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-class Product < ApplicationRecord
-    validates_presence_of :name, :price
-    validates_numericality_of :price, greater_than_or_equal_to: 0
+FactoryBot.define do
+ 
+  factory :product, class: 'Product' do
+
+    name { Faker::Commerce.product_name }
+    price { Faker::Commerce.price(range: 5.0..200.0).to_d }
+
+  end
 end

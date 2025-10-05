@@ -38,6 +38,11 @@ run(){
   docker compose run --rm $args web $@
 }
 
+# run_test(){
+#   echo "docker compose run --rm test $@"
+#   docker compose run --rm test $@
+# }
+
 
 case $1 in
     setup)
@@ -89,6 +94,9 @@ case $1 in
         docker compose run -d db
         time run bundle exec rails db:migrate:reset
         time run bundle exec rails db:seed
+    ;;
+    test)
+        run bundle exec rails rspec ${@:2} 
     ;;
 
     *)

@@ -27,3 +27,5 @@ group :development do
 end
 
 gem "blueprinter", "~> 1.2"
+
+gem "redis-rails", "~> 5.0"

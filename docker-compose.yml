@@ -28,7 +28,7 @@ services:
       volumes:
         - .:/rails
     test:
-        build: .
+        image: rd-commerce
         command: bundle exec rspec
         volumes:
             - .:/rails
@@ -36,6 +36,7 @@ services:
             - db
             - redis 
         environment:
+            RAILS_ENV: test
             DATABASE_URL: postgresql://postgres:password@db:5432/myapp_test
             REDIS_URL: redis://redis:6379/0
 volumes:

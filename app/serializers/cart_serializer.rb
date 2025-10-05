@@ -12,17 +12,11 @@
 #
 #  index_carts_on_status  (status)
 #
-FactoryBot.define do
- 
-  factory :shopping_cart, class: 'Cart' do
+class CartSerializer < Blueprinter::Base
+    view :default do
+        identifier :id
 
-    status { 'active' }
-    total_price { 0.0 }
-    transient do
-      last_interaction_at { nil }
+        association :cart_items, name: :products, blueprint: CartItemSerializer, view: :products
+        fields :total_price
     end
-    updated_at { last_interaction_at || Time.current }
-    created_at { updated_at }
-
-  end
 end

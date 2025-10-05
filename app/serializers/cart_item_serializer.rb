@@ -20,11 +20,22 @@
 #  fk_rails_...  (cart_id => carts.id)
 #  fk_rails_...  (product_id => products.id)
 #
-FactoryBot.define do
-factory :cart_item do
-    quantity { Faker::Number.between(from: 1, to: 10) }
+class CartItemSerializer < Blueprinter::Base
+    view :products do
+        identifier :id do |cart_item|
+            cart_item.product.id
+        end
 
-    association :cart, factory: :shopping_cart
-    association :product
-end
+        field :name do |cart_item|
+            cart_item.product.name
+        end
+
+        field :unit_price do |cart_item|
+            cart_item.product.price
+        end
+
+        field :quantity
+
+        field :total_price
+    end
 end

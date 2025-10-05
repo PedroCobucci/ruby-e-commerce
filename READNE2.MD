@@ -12,6 +12,13 @@ docker build --build-arg UID=$UID -t rd-commerce .
 
 docker compose build
 
-docker compose up
+rd run bundle install
 
-docker compose run --rm web bundle install
+rd db:setup
+
+rd start
+
+
+
+
+docker-compose run --rm -e RAILS_ENV=test web bundle exec rspec
