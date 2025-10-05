@@ -14,11 +14,11 @@ docker compose build
 
 rd run bundle install
 
+rd run_test bundle install
+
 rd db:setup
 
 rd start
 
+rd sidekiq 
 
-
-
-docker-compose run --rm -e RAILS_ENV=test web bundle exec rspec

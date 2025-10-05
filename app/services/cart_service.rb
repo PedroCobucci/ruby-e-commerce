@@ -28,4 +28,15 @@ class CartService
         end
         @cart
     end
+
+    def remove_item(product_id)
+        @cart.transaction do
+            item = @cart.cart_items.find_by!(product_id: product_id)
+
+            item.destroy!
+
+            @cart.recalculate_total_price!
+        end
+        @cart
+    end
 end

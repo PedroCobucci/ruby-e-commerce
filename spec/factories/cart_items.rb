@@ -21,10 +21,14 @@
 #  fk_rails_...  (product_id => products.id)
 #
 FactoryBot.define do
-factory :cart_item do
-    quantity { Faker::Number.between(from: 1, to: 10) }
+    factory :cart_item do
+        quantity { Faker::Number.between(from: 1, to: 10) }
 
-    association :cart, factory: :shopping_cart
-    association :product
-end
+        association :cart, factory: :shopping_cart
+        association :product
+
+        after(:create) do |cart_item|
+            cart_item.cart.recalculate_total_price!
+        end
+    end
 end
