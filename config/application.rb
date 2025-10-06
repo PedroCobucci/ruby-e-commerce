@@ -29,7 +29,7 @@ module Store
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.session_store :redis_store,
-        servers: ["redis://redis:6379/1/session"],
+        servers: [ENV.fetch("REDIS_SESSION_URL", "redis://redis:6379/0")],
         key: "_rd_commerce_session_#{Rails.env}",
         expire_after: 14.days,
         secure: Rails.env.production?,

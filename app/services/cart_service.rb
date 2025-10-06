@@ -13,7 +13,7 @@ class CartService
             @cart.recalculate_total_price!
         end
 
-        @cart
+        @cart.reload
     end
 
     def add_item(product_id, quantity)
@@ -26,7 +26,7 @@ class CartService
 
             @cart.recalculate_total_price!
         end
-        @cart
+        @cart.reload
     end
 
     def remove_item(product_id)
@@ -37,6 +37,6 @@ class CartService
 
             @cart.recalculate_total_price!
         end
-        @cart
+        @cart.reload
     end
 end

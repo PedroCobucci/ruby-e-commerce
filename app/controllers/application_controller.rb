@@ -24,15 +24,20 @@ class ApplicationController < ActionController::API
     end
 
     def find_cart
-        Cart.find_by!(id: session[:cart_id])
-    rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Cart not found' }, status: :not_found
+        cart = Rails.cache.fetch(cart_cache_key, expires_in: 3.hours) do
+            Cart.includes(:products).find_by(id: session[:cart_id])
+        end
+        cart
     end
 
     def create_new_cart
         cart = Cart.create!
         session[:cart_id] = cart.id
         cart
+    end
+
+    def cart_cache_key
+        "cart:#{session[:cart_id]}"
     end
     
 end
