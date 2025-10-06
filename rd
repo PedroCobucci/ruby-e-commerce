@@ -38,6 +38,11 @@ run(){
   docker compose run --rm $args web $@
 }
 
+run_test(){
+  echo "docker compose run --rm -e RAILS_ENV=test test $@"
+  docker compose run --rm -e RAILS_ENV=test test $@
+}
+
 
 case $1 in
     setup)
@@ -55,6 +60,9 @@ case $1 in
     run)
         run ${@:2}
     ;;
+    run_test)
+        run_test ${@:2}
+    ;;
     console)
         run bundle exec rails c  ${@:2}
     ;;
@@ -70,6 +78,42 @@ case $1 in
 
         if $start_back; then docker compose start web; fi
     ;;
+    db:migrate)
+        docker compose run -d db
+        echo 'Migrating the development database'
+        run bundle exec rails db:migrate
+    ;;
+    db:rollback)
+        echo 'Rolling back the development database'
+        run bundle exec rails db:rollback
+    ;;
+    db:setup)
+        echo 'Setting up the database'
+        run bundle exec rails db:setup
+        run bundle exec rails db:migrate
+        run bundle exec rails db:seed
+    ;;
+    db:reset)
+        docker compose run -d db
+        time run bundle exec rails db:migrate:reset
+        time run bundle exec rails db:seed
+    ;;
+    test)
+        run_test bundle exec rspec
+    ;;
+    sidekiq)
+        if $(docker compose exec sidekiq /bin/true &>/dev/null); then
+            start_back=true
+            docker compose stop sidekiq
+        else
+            start_back=false
+        fi
+
+        docker compose run --service-ports --rm --use-aliases sidekiq
+
+        if $start_back; then docker compose start sidekiq; fi
+    ;;
+
     *)
 
     echo 'This is the RD STATION script you can use to run console, bash, test and other useful stuff.'
@@ -87,8 +131,17 @@ case $1 in
     echo "${yellow} stop:${white} shutdown rd-commerce"
     echo "${yellow} sh:${white} brings up a bash session from rd-commerce container"
     echo "${yellow} run:${white} tuns a given command inside the container"
+    echo "${yellow} run_test:${white} runs a given command inside the test container"
     echo "${yellow} console:${white} rails console"
     echo "${yellow} debug:${white} start a debug session"
+    echo "${yellow} sidekiq:${white} start sidekiq worker"
+    echo "DATABASE"
+    echo "${yellow} db:setup:${white} create initial databases and run migrations"
+    echo "${yellow} db:migrate:${white} migrates new changes in the development and test databases"
+    echo "${yellow} db:rollback:${white} undo the last migration in the development and test databases"
+    echo "${yellow} db:reset:${white} drops and create the databases development and test, and run the seeds to the development database."
+    echo "TEST"
+    echo "${yellow} test:${white} runs the test suite"
 
     ;;
 esac

@@ -28,7 +28,14 @@ module Store
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
-    config.session_store :cookie_store, key: '_store_session'
+    config.session_store :redis_store,
+        servers: [ENV.fetch("REDIS_SESSION_URL", "redis://redis:6379/0")],
+        key: "_rd_commerce_session_#{Rails.env}",
+        expire_after: 14.days,
+        secure: Rails.env.production?,
+        httponly: true,
+        same_site: :lax
+    #config.session_store :cookie_store, key: '_store_session'
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use config.session_store, config.session_options
     config.active_job.queue_adapter = :sidekiq

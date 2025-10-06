@@ -1,5 +1,4 @@
 version: '3'
-
 services:
     db:
         image: postgres:16-alpine
@@ -27,17 +26,29 @@ services:
         - redis
       volumes:
         - .:/rails
+    sidekiq:
+      image: rd-commerce
+      command: bundle exec sidekiq
+      volumes:
+        - .:/rails
+      env_file: .env
+      depends_on:
+        - db
+        - redis
+      ports:
+        - 3001:3001 
+      restart: always
     test:
-        build: .
-        command: bundle exec rspec
+        image: rd-commerce
+        command: /bin/bash -c "RAILS_ENV=test bundle exec rspec"
         volumes:
             - .:/rails
         depends_on:
             - db
             - redis 
+        env_file: .env
         environment:
-            DATABASE_URL: postgresql://postgres:password@db:5432/myapp_test
-            REDIS_URL: redis://redis:6379/0
+            - RAILS_ENV=test
 volumes:
     postgres13:
     redis_data:

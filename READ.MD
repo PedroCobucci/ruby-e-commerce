@@ -27,7 +27,7 @@ O projeto foi configurado para ser executado de forma simples e rápida com Dock
 **2. Configure as Variáveis de Ambiente**
 
 ```bash
-mv env.example .env
+mv .env.example .env
 ```
 **3. Instale o Script Auxiliar**
 
