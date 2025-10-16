@@ -1,7 +1,5 @@
 # API E-commerce - API de Carrinho de Compras
 
-Esta é uma solução para o desafio técnico de desenvolvimento de uma API de carrinho de compras, proposta pela RD Station.
-
 O projeto foi desenvolvido com foco nos princípios de **Clean Code**, performance e manutenibilidade, seguindo as melhores práticas do ecossistema Ruby on Rails. A aplicação está totalmente dockerizada para garantir um ambiente de desenvolvimento consistente e de fácil configuração.
 
 ## 📋 Índice

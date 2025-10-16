@@ -116,7 +116,7 @@ case $1 in
 
     *)
 
-    echo 'This is the RD STATION script you can use to run console, bash, test and other useful stuff.'
+    echo 'This is the RD script you can use to run console, bash, test and other useful stuff.'
     echo
     echo "Usage: ${yellow}rd <option> <arguments>${white}"
     echo
